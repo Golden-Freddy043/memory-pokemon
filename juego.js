@@ -1,0 +1,58 @@
+"use strict";
+
+const tiempo = document.querySelector("#tiempo");
+const puntos = document.querySelector("#puntuaciones");
+const cartas = document.querySelectorAll(".cartas");
+
+class Juego {
+  constructor() {
+    this.contador = 5;
+    this.tiempo_transcurrido = 0;
+    this.tiempo_final = 0;
+    this.puntuacion = 0;
+  }
+
+  temporizador() {
+    this.tiempo_restante = setInterval(() => {
+      tiempo.innerHTML = "Tiempo restante: " + this.contador;
+      console.log(this.contador);
+      this.contador--;
+      this.tiempo_transcurrido++;
+      if (this.contador < 0) {
+        this.tiempo_final = this.tiempo_transcurrido;
+        alert("Se ha acabado el tiempo. Los pokemons han huido.");
+        console.log("Se ha acabado el tiempo.");
+        console.log("Tiempo final: ", this.tiempo_final);
+        clearInterval(this.tiempo_restante);
+      }
+    }, 1000);
+  }
+
+  pincharCarta() {
+    if (this.contador > 0) {
+      for (let cadaCarta of cartas) {
+        cadaCarta.addEventListener("click", () => {
+          console.log("Has hecho clic en: " + cadaCarta.id);
+          let carta = document.querySelector(`#${cadaCarta.id}`);
+          console.log(carta.dataset.imagen);
+          let carta_flip = document.getElementById(cadaCarta.id);
+          carta_flip.style.background = `url(${carta.dataset.imagen})`;
+          carta_flip.style.backgroundSize = "100%";
+          carta_flip.style.transform = "rotateY(180deg)";
+          carta_flip.style.transition = "transform 0.8s";
+          this.puntuacion++;
+          puntos.innerHTML = "Puntuación: " + this.puntuacion;
+        });
+      }
+    } else {
+      console.log("Prueba: " + this.contador);
+      return;
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const partida = new Juego();
+  partida.temporizador();
+  partida.pincharCarta();
+});
